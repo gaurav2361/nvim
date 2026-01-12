@@ -29,7 +29,7 @@ return {
       },
       {
         name = "workspace",
-        path = "~/workspace",
+        path = "~/workspace/docs",
       },
     },
   },

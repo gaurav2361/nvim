@@ -100,14 +100,6 @@ keymap("n", "<leader>sx", "<cmd>close<CR>", "Close split")
 keymap("n", "<leader>+", "<C-a>", "Increment number")
 keymap("n", "<leader>-", "<C-x>", "Decrement number")
 
--- Search centering
-keymap("n", "n", "nzzv", "Next match centered")
-keymap("n", "N", "Nzzv", "Prev match centered")
-keymap("n", "*", "*zzv", "Search word forward")
-keymap("n", "#", "#zzv", "Search word backward")
-keymap("n", "g*", "g*zz", "Partial search forward")
-keymap("n", "g#", "g#zz", "Partial search backward")
-
 -- Cut full line
 keymap("n", "<C-x>", "dd", "Cut line")
 

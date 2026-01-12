@@ -2,7 +2,6 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     dependencies = { "davidmh/mdx.nvim" },
-    event = { "BufReadPre", "BufNewFile" },
     build = ":TSUpdate",
     branch = "main",
     opts_extend = { "ensure_installed" },
@@ -26,6 +25,7 @@ return {
         "markdown_inline",
         "svelte",
         "graphql",
+        "sql",
         "bash",
         "php",
         "phpdoc",
@@ -39,55 +39,49 @@ return {
         "vimdoc",
         "c",
         "java",
+        "kotlin",
+        "editorconfig",
+        "ssh_config",
         "rust",
         "ron",
         "terraform",
         "hcl",
         "nu",
         "git_config",
+        "git_rebase",
+        "gitattributes",
+        "gitcommit",
+        "gitignore",
         "hyprlang",
       },
       -- Install parsers synchronously (only applied to `ensure_installed`)
-      sync_install = false,
+      -- sync_install = false,
       -- Automatically install missing parsers when entering buffer
-      auto_install = true,
+      -- auto_install = true,
       -- Enable syntax highlighting
-      highlight = {
-        enable = true,
-      },
+      -- highlight = {
+      --   enable = true,
+      -- },
       -- Enable indentation
-      indent = {
-        enable = true,
-      },
-      incremental_selection = {
-        enable = true,
-        keymaps = {
-          init_selection = "<C-space>",
-          node_incremental = "<C-space>",
-          scope_incremental = false,
-        },
-      },
+      -- indent = {
+      --   enable = true,
+      -- },
+      -- incremental_selection = {
+      --   enable = true,
+      --   keymaps = {
+      --     init_selection = "<C-space>",
+      --     node_incremental = "<C-space>",
+      --     scope_incremental = false,
+      --   },
+      -- },
+      -- NOTE: Legacy options above are removed/commented as they are not supported in main branch setup
     },
     config = function(_, opts)
-      -- install parsers from custom opts.ensure_installed
-      if opts.ensure_installed and #opts.ensure_installed > 0 then
-        require("nvim-treesitter").install(opts.ensure_installed)
-        -- register and start parsers for filetypes
-        for _, parser in ipairs(opts.ensure_installed) do
-          local filetypes = parser -- In this case, parser is the filetype/language name
-          vim.treesitter.language.register(parser, filetypes)
-
-          vim.api.nvim_create_autocmd({ "FileType" }, {
-            pattern = filetypes,
-            callback = function(event)
-              vim.treesitter.start(event.buf, parser)
-            end,
-          })
-        end
-      end
+      -- Setup nvim-treesitter (new API)
+      require("nvim-treesitter").setup({})
 
       vim.filetype.add({
-        extension = { rasi = "rasi", rofi = "rasi", wofi = "rasi" },
+        extension = { rasi = "rasi", rofi = "rasi", wofi = "rasi", tf = "terraform" },
         filename = {
           ["vifmrc"] = "vim",
         },
@@ -104,17 +98,36 @@ return {
       vim.treesitter.language.register("bash", "kitty")
 
       if vim.fn.executable("hypr") == 1 then
-        add("hyprlang")
+        table.insert(opts.ensure_installed, "hyprlang")
       end
 
       if vim.fn.executable("fish") == 1 then
-        add("fish")
+        table.insert(opts.ensure_installed, "fish")
       end
 
       if vim.fn.executable("rofi") == 1 or vim.fn.executable("wofi") == 1 then
-        add("rasi")
+        table.insert(opts.ensure_installed, "rasi")
       end
-      -- require("nvim-treesitter").setup(opts)
+
+      -- Install parsers manually as 'auto_install' is removed from setup
+      if opts.ensure_installed and #opts.ensure_installed > 0 then
+        require("nvim-treesitter").install(opts.ensure_installed)
+      end
+
+      -- Safely enable features via FileType autocmd
+      -- This prevents "Parser could not be created" error during initial load/install
+      vim.api.nvim_create_autocmd("FileType", {
+        callback = function()
+          local ok, err = pcall(vim.treesitter.start)
+          if not ok then
+            -- Silent return ensures no crash if parser isn't ready
+            return
+          end
+          -- Standard treesitter integrations
+          vim.wo.foldmethod = "expr"
+          vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+        end,
+      })
     end,
   },
   -- NOTE: js,ts,jsx,tsx Auto Close Tags
