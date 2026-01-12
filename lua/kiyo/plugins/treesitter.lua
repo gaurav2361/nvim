@@ -24,6 +24,8 @@ return {
         "markdown",
         "markdown_inline",
         "svelte",
+        "c",
+        "cpp",
         "graphql",
         "sql",
         "bash",
@@ -44,6 +46,7 @@ return {
         "ssh_config",
         "rust",
         "ron",
+        "diff",
         "terraform",
         "hcl",
         "nu",
@@ -54,31 +57,13 @@ return {
         "gitignore",
         "hyprlang",
       },
-      -- Install parsers synchronously (only applied to `ensure_installed`)
-      -- sync_install = false,
-      -- Automatically install missing parsers when entering buffer
-      -- auto_install = true,
-      -- Enable syntax highlighting
-      -- highlight = {
-      --   enable = true,
-      -- },
-      -- Enable indentation
-      -- indent = {
-      --   enable = true,
-      -- },
-      -- incremental_selection = {
-      --   enable = true,
-      --   keymaps = {
-      --     init_selection = "<C-space>",
-      --     node_incremental = "<C-space>",
-      --     scope_incremental = false,
-      --   },
-      -- },
-      -- NOTE: Legacy options above are removed/commented as they are not supported in main branch setup
     },
     config = function(_, opts)
       -- Setup nvim-treesitter (new API)
-      require("nvim-treesitter").setup({})
+      require("nvim-treesitter").setup({
+        -- Directory to install parsers and queries to (prepended to `runtimepath` to have priority)
+        install_dir = vim.fn.stdpath("data") .. "/site",
+      })
 
       vim.filetype.add({
         extension = { rasi = "rasi", rofi = "rasi", wofi = "rasi", tf = "terraform" },
