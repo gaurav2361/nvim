@@ -21,11 +21,11 @@ return {
       },
       {
         name = "projects",
-        path = "~/personal/projects",
+        path = "~/personal/projects/docs",
       },
       {
         name = "playground",
-        path = "~/personal/playground",
+        path = "~/personal/playground/docs",
       },
       {
         name = "workspace",
