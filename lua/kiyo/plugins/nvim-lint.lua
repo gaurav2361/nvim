@@ -208,7 +208,7 @@ return {
         local ft = vim.bo.filetype
         local linters = lint.linters_by_ft[ft]
 
-        -- Handle function-based linter selection
+        -- Handle function-based linter selection (your JS/TS logic)
         if type(linters) == "function" then
           linters = linters()
         end
@@ -216,10 +216,16 @@ return {
         if linters and #linters > 0 then
           for _, linter_name in ipairs(linters) do
             local linter = lint.linters[linter_name]
+
+            if type(linter) == "function" then
+              linter = linter()
+            end
+
             if linter then
               local cmd = type(linter.cmd) == "function" and linter.cmd() or linter.cmd
-              if vim.fn.executable(cmd) == 1 then
+              if cmd and vim.fn.executable(cmd) == 1 then
                 lint.try_lint(linter_name)
+                -- We break after the first valid linter found
                 break
               end
             end
