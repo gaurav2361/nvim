@@ -54,6 +54,8 @@ return {
 
       "elm-format",
       "elm-language-server",
+
+      "harper-ls",
     },
   },
   config = function(_, opts)

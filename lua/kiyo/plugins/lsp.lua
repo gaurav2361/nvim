@@ -71,6 +71,7 @@ return {
       "terraformls",
       "tofu_ls",
       "elmls",
+      "harper_ls",
     })
 
     -- LSP Attach Configuration
