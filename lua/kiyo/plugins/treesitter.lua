@@ -26,6 +26,7 @@ return {
         "svelte",
         "c",
         "cpp",
+        "elm",
         "graphql",
         "sql",
         "bash",

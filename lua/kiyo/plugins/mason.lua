@@ -51,6 +51,9 @@ return {
 
       "emmet-language-server",
       "emmet-ls",
+
+      "elm-format",
+      "elm-language-server",
     },
   },
   config = function(_, opts)

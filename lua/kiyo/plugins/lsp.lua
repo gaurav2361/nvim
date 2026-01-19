@@ -70,6 +70,7 @@ return {
       "docker_compose_language_service",
       "terraformls",
       "tofu_ls",
+      "elmls",
     })
 
     -- LSP Attach Configuration
