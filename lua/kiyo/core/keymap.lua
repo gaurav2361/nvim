@@ -142,8 +142,12 @@ keymap("n", "<leader>pmu", "<cmd>MasonUpdate<CR>", "Mason update")
 keymap("n", "<CR>", "ciw", "Change word (Enter)")
 keymap("n", "<BS>", "ci", "Change inside (Backspace)")
 
-keymap("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
-keymap("n", "<M-h>", "<cmd>silent !tmux neww tmux-sessionizer -s 0<CR>")
-keymap("n", "<M-t>", "<cmd>silent !tmux neww tmux-sessionizer -s 1<CR>")
-keymap("n", "<M-n>", "<cmd>silent !tmux neww tmux-sessionizer -s 2<CR>")
-keymap("n", "<M-s>", "<cmd>silent !tmux neww tmux-sessionizer -s 3<CR>")
+keymap("n", "<C-f>", "<cmd>silent !tmux popup -E 'sesh connect \"$(sesh list -i -H -z | fzf)\"'<CR>", "Sesh zoxide picker")
+keymap("n", "<M-f>", "<cmd>silent !tmux popup -E 'sesh connect \"$(sesh list -i -H -z | fzf)\"'<CR>", "Sesh zoxide picker")
+
+keymap("n", "<C-s>", "<cmd>silent !tmux popup -E 'sesh connect \"$(sesh list -t -c | fzf)\"'<CR>", "Sesh sessions picker")
+keymap("n", "<M-s>", "<cmd>silent !tmux popup -E 'sesh connect \"$(sesh list -t -c | fzf)\"'<CR>", "Sesh sessions picker")
+
+keymap("n", "<M-h>", "<cmd>silent !tmux switch-client -l<CR>", "Switch to last session")
+keymap("n", "<M-t>", "<cmd>silent !tmux popup -E 'sesh connect \"$(sesh list -t | fzf)\"'<CR>", "Sesh tmux sessions")
+keymap("n", "<M-n>", "<cmd>silent !tmux popup -E 'sesh connect \"$(sesh list -c | fzf)\"'<CR>", "Sesh configs")
