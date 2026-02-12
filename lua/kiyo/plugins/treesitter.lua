@@ -9,7 +9,6 @@ return {
       -- ensure these languages parsers are installed
       ensure_installed = {
         "json",
-        "jsonc",
         "javascript",
         "typescript",
         "tsx",
@@ -64,21 +63,6 @@ return {
       require("nvim-treesitter").setup({
         -- Directory to install parsers and queries to (prepended to `runtimepath` to have priority)
         install_dir = vim.fn.stdpath("data") .. "/site",
-      })
-
-      vim.filetype.add({
-        extension = { rasi = "rasi", rofi = "rasi", wofi = "rasi", tf = "terraform" },
-        filename = {
-          ["vifmrc"] = "vim",
-        },
-        pattern = {
-          [".*/waybar/config"] = "jsonc",
-          [".*/mako/config"] = "dosini",
-          [".*/kitty/.+%.conf"] = "kitty",
-          [".*/hypr/.+%.conf"] = "hyprlang",
-          ["%.env%.[%w_.-]+"] = "sh",
-          [".*/git/config"] = "gitconfig",
-        },
       })
 
       vim.treesitter.language.register("bash", "kitty")

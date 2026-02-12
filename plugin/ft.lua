@@ -4,6 +4,10 @@ vim.filetype.add({
     mdx = "mdx",
     env = "dotenv",
     base = "yaml",
+    rasi = "rasi",
+    rofi = "rasi",
+    wofi = "rasi",
+    tf = "terraform",
   },
   filename = {
     [".env"] = "sh",
@@ -13,9 +17,16 @@ vim.filetype.add({
     ["*.envrc"] = "sh",
     ["env"] = "dotenv",
     [".base"] = "yaml",
+    ["vifmrc"] = "vim",
   },
   pattern = {
     ["[jt]sconfig.*.json"] = "jsonc",
-    ["%.env%.[%w_.-]+"] = "dotenv",
+    -- ["%.env%.[%w_.-]+"] = "dotenv",
+    [".*/waybar/config"] = "jsonc",
+    [".*/mako/config"] = "dosini",
+    [".*/kitty/.+%.conf"] = "kitty",
+    [".*/hypr/.+%.conf"] = "hyprlang",
+    ["%.env%.[%w_.-]+"] = "sh",
+    [".*/git/config"] = "gitconfig",
   },
 })
