@@ -54,7 +54,7 @@ return {
       "biome",
       "tailwindcss", -- TailwindCSS
       "emmet_language_server", -- Emmet
-      "eslint", -- ESLint
+      "eslint", -- ESLi,nt
       "lua_ls", -- Lua
       "pyright", -- Python
       "gopls", -- Go
@@ -72,6 +72,7 @@ return {
       "tofu_ls",
       "elmls",
       "harper_ls",
+      "markdown_oxide",
     })
 
     -- LSP Attach Configuration

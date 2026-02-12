@@ -29,6 +29,7 @@ return {
       "mdx-analyzer",
       "terraform",
       "tofu-ls",
+      "markdown-oxide",
 
       -- Formatters (for conform.nvim and general use)
       "stylua",
