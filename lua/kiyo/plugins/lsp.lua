@@ -54,7 +54,7 @@ return {
       "biome",
       "tailwindcss", -- TailwindCSS
       "emmet_language_server", -- Emmet
-      "eslint", -- ESLi,nt
+      "eslint", -- ESLint
       "lua_ls", -- Lua
       "pyright", -- Python
       "gopls", -- Go

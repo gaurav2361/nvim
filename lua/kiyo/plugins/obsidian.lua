@@ -1,36 +1,156 @@
 return {
   "obsidian-nvim/obsidian.nvim",
-  version = "*", -- recommended, use latest release instead of latest commit
+  version = "*",
   ft = "markdown",
-  -- Replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
-  -- event = {
-  --   -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
-  --   -- E.g. "BufReadPre " .. vim.fn.expand "~" .. "/my-vault/*.md"
-  --   -- refer to `:h file-pattern` for more examples
-  --   "BufReadPre path/to/my-vault/*.md",
-  --   "BufNewFile path/to/my-vault/*.md",
-  -- },
   ---@module 'obsidian'
+  legacy_commands = false,
   ---@type obsidian.config
   opts = {
-    legacy_commands = false,
     workspaces = {
       {
         name = "personal",
         path = "~/personal/obsidian/brain-log",
       },
-      {
-        name = "projects",
-        path = "~/personal/projects/docs",
-      },
-      {
-        name = "playground",
-        path = "~/personal/playground/docs",
-      },
-      {
-        name = "workspace",
-        path = "~/workspace/docs",
+    },
+    daily_notes = {
+      folder = "Daily",
+      date_format = "%Y/%V/%Y-%m-%d",
+      alias_format = "%a %-d %B %Y",
+      template = "daily.md",
+      workdays_only = false,
+    },
+    completion = {
+      nvim_cmp = false,
+      blink = true,
+      min_chars = 2,
+      create_new = true,
+    },
+    note_id_func = function(title)
+      local suffix = ""
+      if title ~= nil then
+        suffix = title:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", ""):lower()
+      else
+        for _ = 1, 4 do
+          suffix = suffix .. string.char(math.random(65, 90))
+        end
+      end
+      return tostring(os.date("%Y%m%d%H%M%S")) .. "-" .. suffix
+    end,
+
+    note_path_func = function(spec)
+      return (spec.dir / tostring(spec.id)):with_suffix(".md")
+    end,
+    wiki_link_func = "use_alias_only",
+    markdown_link_func = function(opts)
+      return require("obsidian.util").markdown_link(opts)
+    end,
+    preferred_link_style = "wiki",
+    -- frontmatter = {
+    --   enabled = false,
+    -- },
+    templates = {
+      folder = "templates",
+      date_format = "%Y-%m-%d",
+      time_format = "%H:%M",
+      substitutions = {
+        week = function()
+          return tostring(os.date("%V"))
+        end,
+        day = function()
+          return tostring(os.date("%A"))
+        end,
       },
     },
+    open = {
+      use_advanced_uri = false,
+      func = vim.ui.open,
+    },
+
+    picker = {
+      name = "snacks.pick",
+      notemappings = {
+        new = "<C-x>",
+        insert_link = "<C-l>",
+      },
+      tag_mappings = {
+        tag_note = "<C-x>",
+        insert_tag = "<C-l>",
+      },
+    },
+    backlinks = {
+      parse_headers = true,
+    },
+    search = {
+      sort_by = "modified",
+      sort_reversed = true,
+      max_lines = 1000,
+    },
+    open_notes_in = "current",
+    callbacks = {
+      post_setup = function(client) end,
+      -- Set up buffer-local keymaps for obsidian notes
+      enter_note = function(note)
+        vim.keymap.set("n", "<localleader>d", "<cmd>Obsidian dailies 1<cr>", {
+          buffer = note.bufnr,
+          desc = "Show dailies",
+        })
+
+        vim.keymap.set("n", "<localleader>x", "<cmd>Obsidian toggle_checkbox<cr>", {
+          buffer = note.bufnr,
+          desc = "Toggle checkbox",
+        })
+
+        vim.keymap.set("n", "<localleader>l", "<cmd>Obsidian links<cr>", {
+          buffer = note.bufnr,
+          desc = "Search links",
+        })
+
+        vim.keymap.set("n", "<localleader>b", "<cmd>Obsidian backlinks<cr>", {
+          buffer = note.bufnr,
+          desc = "Search backlinks",
+        })
+
+        vim.keymap.set("n", "<localleader>t", "<cmd>Obsidian template<cr>", {
+          buffer = note.bufnr,
+          desc = "Insert Template",
+        })
+
+        vim.keymap.set("n", "<localleader>p", "<cmd>Obsidian paste_img<cr>", {
+          buffer = note.bufnr,
+          desc = "Paste clipboard image",
+        })
+      end,
+      leave_note = function(note) end,
+      pre_write_note = function(note) end,
+      post_set_workspace = function(workspace) end,
+    },
+    ui = {
+      enable = false, -- disabled to allow render-markdown to work
+    },
+    attachments = {
+      folder = "public/",
+      img_name_func = function()
+        return string.format("Pasted image %s", os.date("%Y%m%d%H%M%S"))
+      end,
+      confirm_img_paste = true,
+    },
+
+    footer = {
+      enabled = true,
+      format = "{{backlinks}} backlinks  {{properties}} properties  {{words}} words  {{chars}} chars",
+      hl_group = "Comment",
+      separator = string.rep("-", 80),
+    },
+    checkbox = {
+      order = { " ", "x" },
+    },
+    legacy_commands = false,
+  },
+  keys = {
+    { "<leader>od", "<cmd>Obsidian today<cr>", desc = "Todays Note " },
+    { "<leader>on", "<cmd>Obsidian new<cr>", desc = "New Note" },
+    { "<leader>oo", "<cmd>Obsidian quick_switch<cr>", desc = "Open Quick Switcher" },
+    { "<leader>os", "<cmd>Obsidian search<cr>", desc = "Search Notes" },
+    { "<leader>ot", "<cmd>Obsidian tags<cr>", desc = "Search Tags" },
   },
 }
