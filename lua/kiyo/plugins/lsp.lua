@@ -73,6 +73,7 @@ return {
       "elmls",
       "harper_ls",
       "markdown_oxide",
+      "tombi",
     })
 
     -- LSP Attach Configuration

@@ -30,6 +30,8 @@ return {
       "terraform",
       "tofu-ls",
       "markdown-oxide",
+      "tombi",
+      "taplo",
 
       -- Formatters (for conform.nvim and general use)
       "stylua",

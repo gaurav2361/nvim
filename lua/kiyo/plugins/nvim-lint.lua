@@ -194,6 +194,7 @@ return {
 
       -- PHP
       php = { "pint" },
+      toml = { "tombi" },
 
       -- Terraform
       terraform = { "terraform_validate" },

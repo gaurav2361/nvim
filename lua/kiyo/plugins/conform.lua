@@ -184,6 +184,7 @@ return {
 
         -- Lua
         lua = { "stylua" },
+        toml = { "taplo" },
 
         -- Nix
         nix = { "nixfmt" },

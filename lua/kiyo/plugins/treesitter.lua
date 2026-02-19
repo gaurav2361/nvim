@@ -24,6 +24,7 @@ return {
         "markdown_inline",
         "svelte",
         "c",
+        "toml",
         "cpp",
         "elm",
         "graphql",
