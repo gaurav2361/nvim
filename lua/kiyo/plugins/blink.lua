@@ -4,6 +4,7 @@ return {
     "rafamadriz/friendly-snippets",
     "neovim/nvim-lspconfig",
     "folke/lazydev.nvim",
+    "Kaiser-Yang/blink-cmp-dictionary",
   },
   version = "1.*",
   opts_extend = {
@@ -205,12 +206,35 @@ return {
       },
     },
     sources = {
-      default = { "lsp", "path", "snippets", "buffer", "lazydev" },
+      default = { "lsp", "path", "snippets", "buffer", "lazydev", "dictionary" },
       providers = {
+        lsp = {
+          name = "lsp",
+          enabled = true,
+          score_offset = 100, -- the higher the number, the higher the priority
+        },
         lazydev = {
           name = "LazyDev",
           module = "lazydev.integrations.blink",
-          score_offset = 100,
+          score_offset = 20,
+          max_items = 8,
+          min_keyword_length = 3,
+        },
+        dictionary = {
+          module = "blink-cmp-dictionary",
+          name = "Dict",
+          min_keyword_length = 3,
+          opts = {
+            -- Optional: explicitly force fallback mode
+            -- (By default, fallback is used when fzf is not found)
+            force_fallback = true,
+
+            dictionary_directories = { vim.fn.expand("~/dotfiles/config/nvim/dictionaries") },
+            dictionary_files = {
+              vim.fn.expand("~/dotfiles/config/nvim/spell/en.utf-8.add"),
+              vim.fn.expand("~/dotfiles/config/nvim/spell/es.utf-8.add"),
+            },
+          },
         },
       },
     },

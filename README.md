@@ -42,12 +42,14 @@ This guide provides a complete configuration for setting up Neovim 0.11 with bli
 
 > [!TIP]
 > If you want to see inline error messages (virtual text), it's now disabled by default in Neovim 0.11. Enable it with:
+>
 > ```lua
 > vim.diagnostic.config({ virtual_text = true })
 > ```
 
 > [!IMPORTANT]
 > The `keymap.preset` in blink-cmp has several options:
+>
 > - `'default'`: C-y to accept (recommended, similar to built-in)
 > - `'super-tab'`: Tab to accept (VSCode-like)
 > - `'enter'`: Enter to accept
