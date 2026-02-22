@@ -71,11 +71,11 @@ keymap("n", "_", ":vertical resize -5<CR>", "Decrease pane width")
 keymap("n", "=", ":resize +5<CR>", "Increase pane height")
 keymap("n", "-", ":resize -5<CR>", "Decrease pane height")
 
--- Window navigation
-keymap("n", "<C-h>", "<C-w>h", "Move left")
-keymap("n", "<C-j>", "<C-w>j", "Move down")
-keymap("n", "<C-k>", "<C-w>k", "Move up")
-keymap("n", "<C-l>", "<C-w>l", "Move right")
+-- Window navigation (Handled by vim-tmux-navigator)
+-- keymap("n", "<C-h>", "<C-w>h", "Move left")
+-- keymap("n", "<C-j>", "<C-w>j", "Move down")
+-- keymap("n", "<C-k>", "<C-w>k", "Move up")
+-- keymap("n", "<C-l>", "<C-w>l", "Move right")
 
 -- Window resizing with arrows
 keymap("n", "<C-Up>", "<cmd>resize +2<CR>", "Resize + height")
