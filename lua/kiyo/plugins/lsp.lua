@@ -129,6 +129,12 @@ return {
         vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
         vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
 
+        -- INLAY HINTS CONFIGURATION
+        if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
+          -- Enable inlay hints initially
+          vim.lsp.inlay_hint.enable(true, { bufnr = ev.buf })
+        end
+
         -- Document Highlight (if supported)
         -- Highlight symbol under cursor
         if client and client.server_capabilities.documentHighlightProvider then
