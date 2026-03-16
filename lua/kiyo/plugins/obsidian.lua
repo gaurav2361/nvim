@@ -2,8 +2,9 @@ return {
   "obsidian-nvim/obsidian.nvim",
   version = "*",
   ft = "markdown",
-  ---@module 'obsidian'
-  legacy_commands = false,
+  dependencies = {
+    "nvim-lua/plenary.nvim", -- Added: Explicitly declare the required dependency
+  },
   ---@type obsidian.config
   opts = {
     workspaces = {
@@ -36,7 +37,6 @@ return {
       end
       return tostring(os.date("%Y%m%d%H%M%S")) .. "-" .. suffix
     end,
-
     note_path_func = function(spec)
       return (spec.dir / tostring(spec.id)):with_suffix(".md")
     end,
@@ -45,9 +45,12 @@ return {
       return require("obsidian.util").markdown_link(opts)
     end,
     preferred_link_style = "wiki",
-    -- frontmatter = {
-    --   enabled = false,
-    -- },
+
+    frontmatter = {
+      enabled = true,
+      update_today = true,
+    },
+
     templates = {
       folder = "templates",
       date_format = "%Y-%m-%d",
@@ -65,7 +68,6 @@ return {
       use_advanced_uri = false,
       func = vim.ui.open,
     },
-
     picker = {
       name = "snacks.pick",
       notemappings = {
@@ -86,46 +88,54 @@ return {
       max_lines = 1000,
     },
     open_notes_in = "current",
+
     callbacks = {
-      post_setup = function(client) end,
       -- Set up buffer-local keymaps for obsidian notes
       enter_note = function(note)
-        vim.keymap.set("n", "<localleader>d", "<cmd>Obsidian dailies 1<cr>", {
-          buffer = note.bufnr,
-          desc = "Show dailies",
-        })
+        -- Improved: Use a localized options table for cleaner keymap definitions
+        local map_opts = { buffer = note.bufnr, silent = true }
 
-        vim.keymap.set("n", "<localleader>x", "<cmd>Obsidian toggle_checkbox<cr>", {
-          buffer = note.bufnr,
-          desc = "Toggle checkbox",
-        })
-
-        vim.keymap.set("n", "<localleader>l", "<cmd>Obsidian links<cr>", {
-          buffer = note.bufnr,
-          desc = "Search links",
-        })
-
-        vim.keymap.set("n", "<localleader>b", "<cmd>Obsidian backlinks<cr>", {
-          buffer = note.bufnr,
-          desc = "Search backlinks",
-        })
-
-        vim.keymap.set("n", "<localleader>t", "<cmd>Obsidian template<cr>", {
-          buffer = note.bufnr,
-          desc = "Insert Template",
-        })
-
-        vim.keymap.set("n", "<localleader>p", "<cmd>Obsidian paste_img<cr>", {
-          buffer = note.bufnr,
-          desc = "Paste clipboard image",
-        })
+        vim.keymap.set(
+          "n",
+          "<localleader>d",
+          "<cmd>ObsidianDailies 1<cr>",
+          vim.tbl_extend("force", map_opts, { desc = "Show dailies" })
+        )
+        vim.keymap.set(
+          "n",
+          "<localleader>x",
+          "<cmd>ObsidianToggleCheckbox<cr>",
+          vim.tbl_extend("force", map_opts, { desc = "Toggle checkbox" })
+        )
+        vim.keymap.set(
+          "n",
+          "<localleader>l",
+          "<cmd>ObsidianLinks<cr>",
+          vim.tbl_extend("force", map_opts, { desc = "Search links" })
+        )
+        vim.keymap.set(
+          "n",
+          "<localleader>b",
+          "<cmd>ObsidianBacklinks<cr>",
+          vim.tbl_extend("force", map_opts, { desc = "Search backlinks" })
+        )
+        vim.keymap.set(
+          "n",
+          "<localleader>t",
+          "<cmd>ObsidianTemplate<cr>",
+          vim.tbl_extend("force", map_opts, { desc = "Insert Template" })
+        )
+        vim.keymap.set(
+          "n",
+          "<localleader>p",
+          "<cmd>ObsidianPasteImg<cr>",
+          vim.tbl_extend("force", map_opts, { desc = "Paste clipboard image" })
+        )
       end,
-      leave_note = function(note) end,
-      pre_write_note = function(note) end,
-      post_set_workspace = function(workspace) end,
     },
+
     ui = {
-      enable = false, -- disabled to allow render-markdown to work
+      enable = false, -- Disabled to allow markview.nvim to take over rendering
     },
     attachments = {
       folder = "public/",
@@ -134,7 +144,6 @@ return {
       end,
       confirm_img_paste = true,
     },
-
     footer = {
       enabled = true,
       format = "{{backlinks}} backlinks  {{properties}} properties  {{words}} words  {{chars}} chars",
@@ -147,10 +156,10 @@ return {
     legacy_commands = false,
   },
   keys = {
-    { "<leader>od", "<cmd>Obsidian today<cr>", desc = "Todays Note " },
-    { "<leader>on", "<cmd>Obsidian new<cr>", desc = "New Note" },
-    { "<leader>oo", "<cmd>Obsidian quick_switch<cr>", desc = "Open Quick Switcher" },
-    { "<leader>os", "<cmd>Obsidian search<cr>", desc = "Search Notes" },
-    { "<leader>ot", "<cmd>Obsidian tags<cr>", desc = "Search Tags" },
+    { "<leader>od", "<cmd>ObsidianToday<cr>", desc = "Today's Note" },
+    { "<leader>on", "<cmd>ObsidianNew<cr>", desc = "New Note" },
+    { "<leader>oo", "<cmd>ObsidianQuickSwitch<cr>", desc = "Open Quick Switcher" },
+    { "<leader>os", "<cmd>ObsidianSearch<cr>", desc = "Search Notes" },
+    { "<leader>ot", "<cmd>ObsidianTags<cr>", desc = "Search Tags" },
   },
 }
