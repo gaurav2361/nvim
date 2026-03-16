@@ -55,6 +55,6 @@ return {
   },
   config = function(_, opts)
     require("catppuccin").setup(opts) -- pass the opts to the plugin
-    vim.cmd.colorscheme("catppuccin") -- apply the colorscheme
+    vim.cmd.colorscheme("catppuccin-nvim") -- apply the colorscheme
   end,
 }
