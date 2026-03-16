@@ -74,6 +74,8 @@ return {
       "harper_ls",
       "markdown_oxide",
       "tombi",
+      "phpactor",
+      "laravel_ls",
     })
 
     -- LSP Attach Configuration

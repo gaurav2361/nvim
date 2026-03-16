@@ -15,7 +15,7 @@ return {
       "zls", -- Zig LSP
       "typescript-language-server", -- TypeScript LSP
       "rust-analyzer", -- Rust LSP
-      -- "intelephense", -- PHP LSP
+      "intelephense", -- PHP LSP
       "python-lsp-server", -- Python LSP
       "tailwindcss-language-server", -- Tailwind CSS LSP
       "html-lsp", -- HTML LSP
@@ -45,7 +45,7 @@ return {
       "eslint_d",
       "luacheck", -- Lua linting
       "tflint",
-      -- "pint", -- Laravel Pint for PHP (formatting & linting)
+      "pint", -- Laravel Pint for PHP (formatting & linting)
 
       -- Additional useful tools
       "delve", -- Go debugger
