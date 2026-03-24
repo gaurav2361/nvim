@@ -40,11 +40,25 @@ return {
     note_path_func = function(spec)
       return (spec.dir / tostring(spec.id)):with_suffix(".md")
     end,
-    wiki_link_func = "use_alias_only",
-    markdown_link_func = function(opts)
-      return require("obsidian.util").markdown_link(opts)
-    end,
-    preferred_link_style = "wiki",
+    link = {
+      style = "wiki",
+      ---@param opts obsidian.link.WikiLinkOpts
+      ---@return string
+      wiki = function(opts)
+        local header_or_block = ""
+        if opts.anchor then
+          header_or_block = string.format("#%s", opts.anchor.header)
+        elseif opts.block then
+          header_or_block = string.format("#%s", opts.block.id)
+        end
+        return string.format("[[%s%s]]", opts.label, header_or_block)
+      end,
+      ---@param opts obsidian.link.MarkdownLinkOpts
+      ---@return string
+      markdown = function(opts)
+        return require("obsidian.util").markdown_link(opts)
+      end,
+    },
 
     frontmatter = {
       enabled = true,
