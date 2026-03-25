@@ -180,11 +180,17 @@ return {
 
       -- Go
       go = { "golangcilint" },
+
       -- Python
       python = { "ruff" },
 
+      -- rust
+      rust = { "clippy" },
+
       -- Lua
       lua = { "selene" },
+
+      -- nix
       nix = { "statix" },
 
       -- Shell
