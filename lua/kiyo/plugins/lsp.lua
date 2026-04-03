@@ -108,11 +108,17 @@ return {
         vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
 
         -- Hover documentation
-        vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+        vim.keymap.set("n", "K", function()
+          vim.lsp.buf.hover({ border = "rounded" })
+        end, opts)
 
         -- Signature help
-        vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
-        vim.keymap.set("i", "<C-k>", vim.lsp.buf.signature_help, opts)
+        vim.keymap.set("n", "<C-k>", function()
+          vim.lsp.buf.signature_help({ border = "rounded" })
+        end, opts)
+        vim.keymap.set("i", "<C-k>", function()
+          vim.lsp.buf.signature_help({ border = "rounded" })
+        end, opts)
 
         -- Rename symbol
         vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
