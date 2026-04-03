@@ -136,6 +136,7 @@ return {
   -- Enable tree-sitter highlight for inline code in .nix files
   {
     "calops/hmts.nvim",
+    enabled = false,
     version = "*",
   },
 }
