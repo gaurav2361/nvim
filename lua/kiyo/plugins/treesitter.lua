@@ -6,6 +6,9 @@ return {
     branch = "main",
     main = "nvim-treesitter", -- EXPLICITLY TELL LAZY WHERE SETUP() LIVES
     init = function()
+      -- Register custom predicates and directives for Nix injections (hmts replacement)
+      require("kiyo.utils.nix_treesitter").setup()
+
       -- Define parsers to install here instead of in opts
       local parsers_to_ensure = {
         "json",
@@ -155,12 +158,5 @@ return {
         },
       })
     end,
-  },
-
-  -- Enable tree-sitter highlight for inline code in .nix files
-  {
-    "calops/hmts.nvim",
-    enabled = false,
-    version = "*",
   },
 }
