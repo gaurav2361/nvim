@@ -77,7 +77,8 @@ return {
 
       -- Diff against already-installed parsers so it doesn't reinstall everything on startup
       local alreadyInstalled = require("nvim-treesitter.config").get_installed()
-      local parsersToInstall = vim.iter(parsers_to_ensure)
+      local parsersToInstall = vim
+        .iter(parsers_to_ensure)
         :filter(function(parser)
           return not vim.tbl_contains(alreadyInstalled, parser)
         end)
