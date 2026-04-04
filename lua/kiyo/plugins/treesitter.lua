@@ -4,10 +4,10 @@ return {
     dependencies = { "davidmh/mdx.nvim" },
     build = ":TSUpdate",
     branch = "main",
-    opts_extend = { "ensure_installed" },
-    opts = {
-      -- ensure these languages parsers are installed
-      ensure_installed = {
+    main = "nvim-treesitter", -- EXPLICITLY TELL LAZY WHERE SETUP() LIVES
+    init = function()
+      -- Define parsers to install here instead of in opts
+      local parsers_to_ensure = {
         "json",
         "javascript",
         "typescript",
@@ -57,42 +57,65 @@ return {
         "gitcommit",
         "gitignore",
         "hyprlang",
-      },
-    },
-    config = function(_, opts)
+      }
+
+      -- Conditionally add parsers based on system executables
+      if vim.fn.executable("hypr") == 1 and not vim.tbl_contains(parsers_to_ensure, "hyprlang") then
+        table.insert(parsers_to_ensure, "hyprlang")
+      end
+
+      if vim.fn.executable("fish") == 1 then
+        table.insert(parsers_to_ensure, "fish")
+      end
+
+      if vim.fn.executable("rofi") == 1 or vim.fn.executable("wofi") == 1 then
+        table.insert(parsers_to_ensure, "rasi")
+      end
+
+      -- Diff against already-installed parsers so it doesn't reinstall everything on startup
+      local alreadyInstalled = require("nvim-treesitter.config").get_installed()
+      local parsersToInstall = vim.iter(parsers_to_ensure)
+        :filter(function(parser)
+          return not vim.tbl_contains(alreadyInstalled, parser)
+        end)
+        :totable()
+
+      if #parsersToInstall > 0 then
+        require("nvim-treesitter").install(parsersToInstall)
+      end
+    end,
+    config = function()
       -- Setup nvim-treesitter (new API)
       require("nvim-treesitter").setup({
         -- Directory to install parsers and queries to (prepended to `runtimepath` to have priority)
         install_dir = vim.fn.stdpath("data") .. "/site",
+
+        -- ENHANCEMENT: Enable Indent
+        indent = {
+          enable = true,
+        },
+
+        -- ENHANCEMENT: Enable Incremental Selection
+        incremental_selection = {
+          enable = true,
+          keymaps = {
+            init_selection = "<C-space>",
+            node_incremental = "<C-space>",
+            scope_incremental = false,
+            node_decremental = "<bs>",
+          },
+        },
       })
 
       vim.treesitter.language.register("bash", "kitty")
-
-      if vim.fn.executable("hypr") == 1 then
-        table.insert(opts.ensure_installed, "hyprlang")
-      end
-
-      if vim.fn.executable("fish") == 1 then
-        table.insert(opts.ensure_installed, "fish")
-      end
-
-      if vim.fn.executable("rofi") == 1 or vim.fn.executable("wofi") == 1 then
-        table.insert(opts.ensure_installed, "rasi")
-      end
-
-      -- Install parsers manually as 'auto_install' is removed from setup
-      if opts.ensure_installed and #opts.ensure_installed > 0 then
-        require("nvim-treesitter").install(opts.ensure_installed)
-      end
 
       -- Safely enable features via FileType autocmd
       -- This prevents "Parser could not be created" error during initial load/install
       vim.api.nvim_create_autocmd("FileType", {
         callback = function()
-          local ok, err = pcall(vim.treesitter.start)
+          local ok, _ = pcall(vim.treesitter.start)
           if not ok then
-            -- Silent return ensures no crash if parser isn't ready
-            return
+            return -- Silent return ensures no crash if parser isn't ready
           end
           -- Standard treesitter integrations
           vim.wo.foldmethod = "expr"
@@ -101,6 +124,7 @@ return {
       })
     end,
   },
+
   -- NOTE: js,ts,jsx,tsx Auto Close Tags
   {
     "windwp/nvim-ts-autotag",
@@ -120,19 +144,19 @@ return {
         opts = {
           enable_close = true, -- Auto-close tags
           enable_rename = true, -- Auto-rename pairs
-          -- enable_close_on_slash = false, -- Disable auto-close on trailing `</`
         },
         per_filetype = {
           ["html"] = {
-            enable_close = true, -- Disable auto-closing for HTML
+            enable_close = true,
           },
           ["typescriptreact"] = {
-            enable_close = true, -- Explicitly enable auto-closing (optional, defaults to `true`)
+            enable_close = true,
           },
         },
       })
     end,
   },
+
   -- Enable tree-sitter highlight for inline code in .nix files
   {
     "calops/hmts.nvim",
