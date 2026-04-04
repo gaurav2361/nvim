@@ -12,6 +12,7 @@ return {
       -- Define parsers to install here instead of in opts
       local parsers_to_ensure = {
         "json",
+        "jsonc",
         "javascript",
         "typescript",
         "tsx",
@@ -43,7 +44,6 @@ return {
         "gitignore",
         "query",
         "vimdoc",
-        "c",
         "java",
         "kotlin",
         "editorconfig",
@@ -58,8 +58,8 @@ return {
         "git_rebase",
         "gitattributes",
         "gitcommit",
-        "gitignore",
         "hyprlang",
+        "regex",
       }
 
       -- Conditionally add parsers based on system executables

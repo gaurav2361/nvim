@@ -20,6 +20,8 @@ return {
       "tailwindcss-language-server", -- Tailwind CSS LSP
       "html-lsp", -- HTML LSP
       "css-lsp", -- CSS LSP
+      "json-lsp",
+      "eslint-lsp",
       "vue-language-server", -- Vue LSP
       "biome",
       "docker-language-server",
