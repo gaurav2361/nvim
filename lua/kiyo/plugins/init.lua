@@ -63,8 +63,10 @@ return {
   {
     "mbbill/undotree",
     event = { "BufReadPre", "BufNewFile" },
-    vim.keymap.set("n", "<leader><F5>", vim.cmd.UndotreeToggle),
-    vim.keymap.set("n", "<leader>uu", vim.cmd.UndotreeToggle),
+    keys = {
+      { "<leader><F5>", "<cmd>UndotreeToggle<cr>", desc = "Toggle Undotree" },
+      { "<leader>uu", "<cmd>UndotreeToggle<cr>", desc = "Toggle Undotree" },
+    },
   },
   {
     "nvim-tree/nvim-web-devicons",

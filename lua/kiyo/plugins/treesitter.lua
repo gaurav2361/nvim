@@ -12,7 +12,6 @@ return {
       -- Define parsers to install here instead of in opts
       local parsers_to_ensure = {
         "json",
-        "jsonc",
         "javascript",
         "typescript",
         "tsx",
