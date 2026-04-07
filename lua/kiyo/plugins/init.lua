@@ -72,7 +72,35 @@ return {
     "nvim-tree/nvim-web-devicons",
     -- lazy = true,
     event = "VeryLazy",
-    opts = {},
+    opts = {
+      override = {
+        [".env.local"] = {
+          icon = "",
+          color = "#89b4fa",
+          name = "EnvLocal",
+        },
+        [".envrc"] = {
+          icon = "",
+          color = "#f9e2af",
+          name = "Envrc",
+        },
+        [".env.example"] = {
+          icon = "",
+          color = "#f9e2af",
+          name = "EnvExample",
+        },
+        [".env.development"] = {
+          icon = "",
+          color = "#a6e3a1",
+          name = "EnvDevelopment",
+        },
+        [".env.production"] = {
+          icon = "",
+          color = "#f38ba8",
+          name = "EnvProduction",
+        },
+      },
+    },
   },
   {
     "nvim-lua/plenary.nvim",
