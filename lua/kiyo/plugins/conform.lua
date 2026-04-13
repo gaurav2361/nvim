@@ -172,12 +172,21 @@ return {
           return { "prettier_for_project", "biome_for_project", stop_after_first = true }
         end,
 
-        -- Other web formats - prettier preferred
-        yaml = { "prettier" },
-        markdown = { "prettier" },
+        -- Core Web (Keeping your Biome preference)
         html = { "biome" },
         css = { "biome" },
-        scss = { "prettier" },
+
+        -- Data, Docs, and Content (Oxfmt taking over Prettier)
+        markdown = { "oxfmt" },
+        mdx = { "oxfmt" },
+        yaml = { "oxfmt" },
+
+        -- Additional Styling & Frameworks (Oxfmt)
+        scss = { "oxfmt" },
+        less = { "oxfmt" },
+        vue = { "oxfmt" },
+        graphql = { "oxfmt" },
+        handlebars = { "oxfmt" },
 
         -- Go
         go = { "goimports", "gofmt" },

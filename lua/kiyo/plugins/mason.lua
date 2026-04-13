@@ -41,6 +41,7 @@ return {
       "goimports",
       "prettier",
       "blade-formatter",
+      "oxfmt",
 
       -- Linters and diagnostics
       "golangci-lint",
