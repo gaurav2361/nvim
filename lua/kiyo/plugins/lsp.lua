@@ -6,6 +6,9 @@ return {
     "saghen/blink.cmp", -- For LSP capabilities (auto-detected in 0.11)
   },
   config = function()
+    -- Disable semantic highlighting for Rust strings to allow Treesitter injections
+    vim.api.nvim_set_hl(0, "@lsp.type.string.rust", {})
+
     -- Diagnostic Configuration
     vim.diagnostic.config({
       -- Show diagnostic signs in the sign column
