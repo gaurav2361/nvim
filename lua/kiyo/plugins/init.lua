@@ -104,6 +104,7 @@ return {
   },
   {
     "nvim-lua/plenary.nvim",
+    lazy = true,
   },
   -- Neovim plugin to improve the default vim.ui interfaces
   {
