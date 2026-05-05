@@ -21,8 +21,8 @@ keymap("n", "<Esc>", ":nohlsearch<CR>", "Clear highlights")
 keymap("n", "<leader>nh", ":nohl<CR>", "Clear highlights")
 
 -- Centered scrolling
--- keymap("n", "<C-d>", "<C-d>zz", "Scroll down and center")
--- keymap("n", "<C-u>", "<C-u>zz", "Scroll up and center")
+keymap("n", "<C-d>", "<C-d>zz", "Scroll down and center")
+keymap("n", "<C-u>", "<C-u>zz", "Scroll up and center")
 
 -- Visual movement
 keymap("v", "J", ":m '>+1<CR>gv=gv", "Move selection down")

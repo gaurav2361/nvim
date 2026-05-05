@@ -1,11 +1,8 @@
 vim.g.mapleader = " " -- change leader to a space
 vim.g.maplocalleader = " " -- change localleader to a space
 
-vim.encoding = "utf-8"
-vim.fileencoding = "utf-8"
-vim.opt.encoding = "utf-8"
+vim.loader.enable() -- Lua module bytecode cache
 
-vim.loader.enable() -- Lua module bytecode cache (replaces impatient)
 -- Disable language providers you don't use
 vim.g.loaded_python3_provider = 0
 vim.g.loaded_ruby_provider = 0
@@ -21,13 +18,12 @@ vim.opt.clipboard = "unnamedplus" -- allows neovim to access the system clipboar
 vim.opt.cmdheight = 1 -- more space in the neovim command line for displaying messages
 vim.opt.completeopt = { "menu", "menuone", "noselect" } -- mostly just for cmp
 vim.opt.conceallevel = 0 -- so that `` is visible in markdown files
-vim.opt.fileencoding = "utf-8" -- the encoding written to a file
 vim.opt.hlsearch = true -- highlight all matches on previous search pattern
 vim.opt.ignorecase = true -- ignore case in search patterns
 vim.opt.mouse = "a" -- allow the mouse to be used in neovim
 vim.opt.pumheight = 10 -- pop up menu height
 vim.opt.showmode = false -- we don't need to see things like -- INSERT -- anymore
-vim.opt.showtabline = 0 -- always show tabs
+vim.opt.showtabline = 2 -- always show tabs
 vim.opt.smartcase = true -- smart case
 vim.opt.smartindent = true -- make indenting smarter again
 vim.opt.splitbelow = true -- force all horizontal splits to go below current window
@@ -44,7 +40,6 @@ vim.opt.writebackup = false -- if a file is being edited by another program (or 
 vim.opt.tabstop = 2
 vim.opt.smarttab = true
 vim.opt.shiftwidth = 2 -- the number of spaces inserted for each indentation
-vim.opt.smartindent = true
 vim.opt.breakindent = true -- wrap lines with indent
 vim.opt.autoindent = true
 vim.opt.expandtab = true -- convert tabs to spaces

@@ -375,10 +375,10 @@ autocmd({ "FileType" }, {
 
 autocmd({ "CursorHold" }, {
   callback = function()
-    local status_ok, luasnip = pcall(require, "luasnip")
-    if not status_ok then
+    if not package.loaded["luasnip"] then
       return
     end
+    local luasnip = require("luasnip")
     if luasnip.expand_or_jumpable() then
       -- ask maintainer for option to make this silent
       -- luasnip.unlink_current()
