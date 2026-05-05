@@ -1,5 +1,6 @@
 return {
   "nvim-lualine/lualine.nvim",
+  event = "VeryLazy",
   opts = function(_, opts)
     local auto = require("lualine.themes.auto")
     local utils = require("kiyo.utils.lualine-utils")
@@ -72,9 +73,13 @@ return {
 
       lualine_c = {
         utils.separator(),
-        utils.root_dir(),
-        { "filetype", icon_only = true, separator = "", padding = { left = 0, right = 0 } },
-        { utils.pretty_path() },
+        {
+          "filename",
+          path = 3, -- 0: Just the filename, 1: Relative path, 2: Absolute path, 3: Absolute path, with tilde as the home directory
+          color = { fg = utils.colors.green, bg = "none", gui = "bold" },
+          padding = { left = 1, right = 1 },
+          symbols = { modified = "  ", readonly = " 󰌾 ", unnamed = " 󰟢 " },
+        },
       },
 
       lualine_x = {

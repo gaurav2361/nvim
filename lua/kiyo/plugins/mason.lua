@@ -14,7 +14,6 @@ return {
       "gopls", -- Go LSP
       "zls", -- Zig LSP
       "typescript-language-server", -- TypeScript LSP
-      "rust-analyzer", -- Rust LSP
       "intelephense", -- PHP LSP
       "python-lsp-server", -- Python LSP
       "tailwindcss-language-server", -- Tailwind CSS LSP
@@ -34,6 +33,7 @@ return {
       "markdown-oxide",
       "tombi",
       "taplo",
+      "codelldb",
 
       -- Formatters (for conform.nvim and general use)
       "stylua",
@@ -54,13 +54,10 @@ return {
       "delve", -- Go debugger
       "shfmt", -- Shell formatter
       "shellcheck", -- Shell linter
-
       "emmet-language-server",
       "emmet-ls",
-
       "elm-format",
       "elm-language-server",
-
       "harper-ls",
     },
   },

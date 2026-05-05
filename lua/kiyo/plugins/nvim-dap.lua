@@ -68,6 +68,21 @@ return {
       desc = "Debug: Toggle UI",
     },
     {
+      "<leader>De",
+      function()
+        require("dapui").eval()
+      end,
+      mode = { "n", "v" },
+      desc = "Debug: Evaluate",
+    },
+    {
+      "<leader>Dx",
+      function()
+        require("dap").terminate()
+      end,
+      desc = "Debug: Terminate",
+    },
+    {
       "<leader>Dl",
       function()
         require("dap").run_last()
@@ -79,29 +94,42 @@ return {
     local dap = require("dap")
     local dapui = require("dapui")
 
-    -- optional
-    -- require('mason-nvim-dap').setup {
-    --     automatic_installation = true,
-    --     handlers = {},
-    --     ensure_installed = {
-    --         'delve',
-    --     },
-    -- }
+    -- Define custom signs for breakpoints and execution state
+    vim.fn.sign_define(
+      "DapBreakpoint",
+      { text = "󰏤 ", texthl = "DapBreakpoint", linehl = "", numhl = "" }
+    )
+    vim.fn.sign_define(
+      "DapBreakpointCondition",
+      { text = "󰟃 ", texthl = "DapBreakpoint", linehl = "", numhl = "" }
+    )
+    vim.fn.sign_define(
+      "DapStopped",
+      { text = "󰁕 ", texthl = "DapStopped", linehl = "DiagnosticUnderlineInfo", numhl = "DapStopped" }
+    )
+    vim.fn.sign_define(
+      "DapBreakpointRejected",
+      { text = "󰃭 ", texthl = "DapBreakpoint", linehl = "", numhl = "" }
+    )
+    vim.fn.sign_define(
+      "DapLogPoint",
+      { text = "󰰰 ", texthl = "DapLogPoint", linehl = "", numhl = "" }
+    )
 
     -- Dap UI setup
     dapui.setup({
-      icons = { expanded = "▾", collapsed = "▸", current_frame = "*" },
+      icons = { expanded = "▾", collapsed = "▸", current_frame = "󰁕 " },
       controls = {
         icons = {
-          pause = "⏸",
-          play = "▶",
-          step_into = "⏎",
-          step_over = "⏭",
-          step_out = "⏮",
-          step_back = "b",
-          run_last = "▶▶",
-          terminate = "⏹",
-          disconnect = "⏏",
+          pause = " ",
+          play = " ",
+          step_into = " ",
+          step_over = " ",
+          step_out = " ",
+          step_back = " ",
+          run_last = " ",
+          terminate = " ",
+          disconnect = " ",
         },
       },
     })

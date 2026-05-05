@@ -122,6 +122,10 @@ return {
     -- Smart linter selection for JS/TS
     local function js_like_linters()
       local bufnr = vim.api.nvim_get_current_buf()
+      if vim.b[bufnr].cached_js_linters then
+        return vim.b[bufnr].cached_js_linters
+      end
+
       local bufname = vim.api.nvim_buf_get_name(bufnr)
       local dirname = vim.fn.fnamemodify(bufname, ":h")
 
@@ -141,15 +145,19 @@ return {
       -- Check if project has biome config
       local has_biome = find_config_file({ "biome.json", "biome.jsonc" }, dirname) ~= nil
 
+      local result
       -- Priority: ESLint (if configured) > Biome (project or default)
       if has_eslint then
-        return { "eslint_d" }
+        result = { "eslint_d" }
       elseif has_biome or file_exists(default_biome_config) then
-        return { "biome" }
+        result = { "biome" }
+      else
+        -- Fallback to biome with default config
+        result = { "biome" }
       end
 
-      -- Fallback to biome with default config
-      return { "biome" }
+      vim.b[bufnr].cached_js_linters = result
+      return result
     end
 
     -- Configure linters by filetype
@@ -162,20 +170,26 @@ return {
 
       -- JSON - use biome if available
       json = function()
-        local dirname = vim.fn.expand("%:p:h")
-        local has_biome = find_config_file({ "biome.json", "biome.jsonc" }, dirname) ~= nil
-        if has_biome or file_exists(default_biome_config) then
-          return { "biome" }
+        local bufnr = vim.api.nvim_get_current_buf()
+        if vim.b[bufnr].cached_json_linters then
+          return vim.b[bufnr].cached_json_linters
         end
-        return {}
+        local dirname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ":h")
+        local has_biome = find_config_file({ "biome.json", "biome.jsonc" }, dirname) ~= nil
+        local result = (has_biome or file_exists(default_biome_config)) and { "biome" } or {}
+        vim.b[bufnr].cached_json_linters = result
+        return result
       end,
       jsonc = function()
-        local dirname = vim.fn.expand("%:p:h")
-        local has_biome = find_config_file({ "biome.json", "biome.jsonc" }, dirname) ~= nil
-        if has_biome or file_exists(default_biome_config) then
-          return { "biome" }
+        local bufnr = vim.api.nvim_get_current_buf()
+        if vim.b[bufnr].cached_json_linters then
+          return vim.b[bufnr].cached_json_linters
         end
-        return {}
+        local dirname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ":h")
+        local has_biome = find_config_file({ "biome.json", "biome.jsonc" }, dirname) ~= nil
+        local result = (has_biome or file_exists(default_biome_config)) and { "biome" } or {}
+        vim.b[bufnr].cached_json_linters = result
+        return result
       end,
 
       -- Go
@@ -185,7 +199,7 @@ return {
       python = { "ruff" },
 
       -- rust
-      rust = { "clippy" },
+      rust = {},
 
       -- Lua
       lua = { "selene" },
@@ -209,7 +223,7 @@ return {
 
     -- Auto-lint on file events
     local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
-    vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+    vim.api.nvim_create_autocmd({ "BufWritePost" }, {
       group = lint_augroup,
       callback = function()
         local ft = vim.bo.filetype

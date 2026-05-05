@@ -61,10 +61,10 @@ return {
       native_lsp = true,
       lsp_styles = { -- Handles the style of specific lsp hl groups (see `:h lsp-highlight`).
         underlines = {
-          errors = { "undercurl" },
-          hints = { "undercurl" },
-          warnings = { "undercurl" },
-          information = { "undercurl" },
+          errors = { "italic" },
+          hints = { "italic" },
+          warnings = { "italic" },
+          information = { "italic" },
         },
         virtual_text = {
           errors = "italic",

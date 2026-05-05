@@ -100,8 +100,12 @@ return {
     })
 
     -- Smart formatter selection for JS/TS files
-    local function js_like_formatters()
-      local bufnr = vim.api.nvim_get_current_buf()
+    local function js_like_formatters(bufnr)
+      bufnr = bufnr or vim.api.nvim_get_current_buf()
+      if vim.b[bufnr].cached_js_formatters then
+        return vim.b[bufnr].cached_js_formatters
+      end
+
       local bufname = vim.api.nvim_buf_get_name(bufnr)
       local dirname = vim.fn.fnamemodify(bufname, ":h")
 
@@ -131,15 +135,19 @@ return {
         end
       end
 
+      local result
       -- Priority: biome (project or default) > prettier (project) > prettier (global)
       if has_biome then
-        return { "biome_for_project" }
+        result = { "biome_for_project" }
       elseif has_prettier then
-        return { "prettier_for_project" }
+        result = { "prettier_for_project" }
       else
         -- Fallback to biome with default config
-        return { "biome_for_project" }
+        result = { "biome_for_project" }
       end
+      
+      vim.b[bufnr].cached_js_formatters = result
+      return result
     end
 
     return {
@@ -155,21 +163,27 @@ return {
         typescriptreact = js_like_formatters,
 
         -- JSON - prefer biome, fallback to prettier
-        json = function()
-          local dirname = vim.fn.expand("%:p:h")
-          local has_biome = find_config_file({ "biome.json", "biome.jsonc" }, dirname) ~= nil
-          if has_biome then
-            return { "biome_for_project" }
+        json = function(bufnr)
+          bufnr = bufnr or vim.api.nvim_get_current_buf()
+          if vim.b[bufnr].cached_json_formatters then
+            return vim.b[bufnr].cached_json_formatters
           end
-          return { "prettier_for_project", "biome_for_project", stop_after_first = true }
+          local dirname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ":h")
+          local has_biome = find_config_file({ "biome.json", "biome.jsonc" }, dirname) ~= nil
+          local result = has_biome and { "biome_for_project" } or { "prettier_for_project", "biome_for_project", stop_after_first = true }
+          vim.b[bufnr].cached_json_formatters = result
+          return result
         end,
-        jsonc = function()
-          local dirname = vim.fn.expand("%:p:h")
-          local has_biome = find_config_file({ "biome.json", "biome.jsonc" }, dirname) ~= nil
-          if has_biome then
-            return { "biome_for_project" }
+        jsonc = function(bufnr)
+          bufnr = bufnr or vim.api.nvim_get_current_buf()
+          if vim.b[bufnr].cached_json_formatters then
+            return vim.b[bufnr].cached_json_formatters
           end
-          return { "prettier_for_project", "biome_for_project", stop_after_first = true }
+          local dirname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ":h")
+          local has_biome = find_config_file({ "biome.json", "biome.jsonc" }, dirname) ~= nil
+          local result = has_biome and { "biome_for_project" } or { "prettier_for_project", "biome_for_project", stop_after_first = true }
+          vim.b[bufnr].cached_json_formatters = result
+          return result
         end,
 
         -- Core Web (Keeping your Biome preference)

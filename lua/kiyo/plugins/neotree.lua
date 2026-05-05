@@ -7,7 +7,6 @@ return {
     "nvim-tree/nvim-web-devicons", -- optional, but recommended
     "gaurav23617/neotree-file-nesting-config",
   },
-  lazy = false, -- neo-tree will lazily load itself
   ---@module 'neo-tree'
   ---@type neotree.Config
   opts = {
@@ -107,7 +106,7 @@ return {
     },
   },
   keys = {
-    { "<leader>e", "<cmd>Neotree toggle<cr>", desc = "Explorer NeoTree (root dir)" },
+    { "<leader>be", "<cmd>Neotree toggle<cr>", desc = "Explorer NeoTree (root dir)" },
   },
   config = function(_, opts)
     local function on_move(data)

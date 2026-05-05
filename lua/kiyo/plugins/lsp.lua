@@ -1,5 +1,6 @@
 return {
   "neovim/nvim-lspconfig",
+  event = { "BufReadPost", "BufNewFile" },
   dependencies = {
     "mason-org/mason.nvim",
     "mason-org/mason-lspconfig.nvim",
@@ -49,40 +50,38 @@ return {
       },
     })
 
-    -- Enable LSP Servers
+    -- Enable LSP Servers (Native Neovim 0.11+ API)
+    -- This is the safest way to ensure your specific servers are loaded.
+    -- Note: rust_analyzer is EXCLUDED because it's handled by rustaceanvim.
     vim.lsp.enable({
-      "ts_ls", -- TypeScript/JavaScript
-      "html", -- HTML
-      "cssls", -- CSS
+      "ts_ls",
+      "html",
+      "cssls",
       "biome",
-      "tailwindcss", -- TailwindCSS
-      "emmet_language_server", -- Emmet
-      "eslint", -- ESLint
-      "lua_ls", -- Lua
-      "pyright", -- Python
-      "gopls", -- Go
-      "rust_analyzer", -- Rust
+      "tailwindcss",
+      "emmet_language_server",
+      "eslint",
+      "lua_ls",
+      "pyright",
+      "gopls",
       "zls",
       "nixd",
       "intelephense",
-      "tailwindcss",
-      "vue_ls",
+      "volar", -- Correct name for Vue/Vite
       "jsonls",
       "yamlls",
       "dockerls",
       "docker_compose_language_service",
       "terraformls",
-      "tofu_ls",
+      "opentofu_ls", -- Correct name for OpenTofu
       "elmls",
       "harper_ls",
       "markdown_oxide",
-      "tombi",
       "phpactor",
       "laravel_ls",
     })
 
-    -- LSP Attach Configuration
-    -- Customize behavior when LSP attaches to a buffer
+    -- LSP Attach Configuration    -- Customize behavior when LSP attaches to a buffer
     vim.api.nvim_create_autocmd("LspAttach", {
       group = vim.api.nvim_create_augroup("UserLspConfig", {}),
       callback = function(ev)

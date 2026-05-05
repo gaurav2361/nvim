@@ -1,6 +1,7 @@
 return {
   {
     "nvim-treesitter/nvim-treesitter",
+    event = { "BufReadPost", "BufNewFile" },
     dependencies = { "davidmh/mdx.nvim" },
     build = ":TSUpdate",
     branch = "main",
@@ -8,8 +9,9 @@ return {
     init = function()
       -- Register custom predicates and directives for Nix injections (hmts replacement)
       require("kiyo.utils.nix_treesitter").setup()
-
-      -- Define parsers to install here instead of in opts
+    end,
+    config = function()
+      -- Define parsers to install
       local parsers_to_ensure = {
         "json",
         "javascript",
@@ -74,22 +76,9 @@ return {
         table.insert(parsers_to_ensure, "rasi")
       end
 
-      -- Diff against already-installed parsers so it doesn't reinstall everything on startup
-      local alreadyInstalled = require("nvim-treesitter.config").get_installed()
-      local parsersToInstall = vim
-        .iter(parsers_to_ensure)
-        :filter(function(parser)
-          return not vim.tbl_contains(alreadyInstalled, parser)
-        end)
-        :totable()
-
-      if #parsersToInstall > 0 then
-        require("nvim-treesitter").install(parsersToInstall)
-      end
-    end,
-    config = function()
       -- Setup nvim-treesitter (new API)
       require("nvim-treesitter").setup({
+        ensure_installed = parsers_to_ensure,
         -- Directory to install parsers and queries to (prepended to `runtimepath` to have priority)
         install_dir = vim.fn.stdpath("data") .. "/site",
 

@@ -42,40 +42,6 @@ function M.separator()
   }
 end
 
--- Root directory component
-function M.root_dir()
-  return {
-    function()
-      local cwd = vim.fn.getcwd()
-      return "󱉭 " .. vim.fn.fnamemodify(cwd, ":t")
-    end,
-    color = { fg = M.colors.green, bg = "NONE", gui = "bold" },
-    padding = { left = 1, right = 1 },
-  }
-end
-
--- Pretty path component
-function M.pretty_path()
-  return function()
-    local path = vim.fn.expand("%:p")
-    if path == "" then
-      return ""
-    end
-
-    local cwd = vim.fn.getcwd()
-    if path:find(cwd, 1, true) == 1 then
-      path = path:sub(#cwd + 2)
-    end
-
-    local parts = vim.split(path, "[\\/]")
-    if #parts > 3 then
-      parts = { parts[1], "…", parts[#parts - 1], parts[#parts] }
-    end
-
-    return table.concat(parts, "/")
-  end
-end
-
 -- Macro recording component
 function M.macro_recording()
   local recording_register = vim.fn.reg_recording()
@@ -84,11 +50,7 @@ end
 
 -- Lazy updates component
 function M.lazy_updates()
-  local ok, lazy_status = pcall(require, "lazy.status")
-  if ok and lazy_status.has_updates() then
-    return "" .. lazy_status.updates()
-  end
-  return ""
+  return require("lazy.status").updates()
 end
 
 -- Check if lazy has updates
