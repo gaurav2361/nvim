@@ -5,8 +5,8 @@ local function keymap(mode, keys, action, desc)
 end
 
 -- Insert mode exit
-keymap("i", "jj", "<ESC>", "Exit insert mode with jj")
-keymap("i", "jk", "<ESC>:w<CR>", "Exit insert mode and save")
+-- keymap("i", "jj", "<ESC>", "Exit insert mode with jj")
+keymap("i", "jk", "<ESC>", "Exit insert mode")
 
 -- Save / Quit
 keymap("n", "<leader>w", "<cmd>w<CR>", "Save file")
@@ -57,9 +57,6 @@ keymap({ "v", "x" }, "p", "P", "Paste without yank")
 
 -- Yank inside {}
 keymap("n", "YY", "va{Vy", "Yank inside braces")
-
--- Exit insert with save
-keymap("i", "jk", "<ESC>:w<CR>", "Save & exit insert")
 
 -- Start / end of line
 keymap({ "n", "x", "o" }, "H", "^", "Start of line")
