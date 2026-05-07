@@ -170,7 +170,7 @@ return {
           end
           local dirname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ":h")
           local has_biome = find_config_file({ "biome.json", "biome.jsonc" }, dirname) ~= nil
-          local result = has_biome and { "biome_for_project" } or { "prettier_for_project", "biome_for_project", stop_after_first = true }
+          local result = has_biome and { "biome_for_project" } or { "prettier_for_project", "biome_for_project" }
           vim.b[bufnr].cached_json_formatters = result
           return result
         end,
@@ -181,7 +181,7 @@ return {
           end
           local dirname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ":h")
           local has_biome = find_config_file({ "biome.json", "biome.jsonc" }, dirname) ~= nil
-          local result = has_biome and { "biome_for_project" } or { "prettier_for_project", "biome_for_project", stop_after_first = true }
+          local result = has_biome and { "biome_for_project" } or { "prettier_for_project", "biome_for_project" }
           vim.b[bufnr].cached_json_formatters = result
           return result
         end,
