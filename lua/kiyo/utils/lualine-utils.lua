@@ -106,14 +106,19 @@ function M.get_linters()
     end
   end
 
-  -- Normalize to table
-  if type(configured_linters) == "string" then
-    return { configured_linters }
-  elseif type(configured_linters) == "table" then
-    return configured_linters
+  -- Normalize to table and extract linter names
+  local linters = {}
+  if type(configured_linters) == "table" then
+    for _, linter in ipairs(configured_linters) do
+      if type(linter) == "string" then
+        table.insert(linters, linter)
+      end
+    end
+  elseif type(configured_linters) == "string" then
+    table.insert(linters, configured_linters)
   end
 
-  return {}
+  return linters
 end
 
 -- Get active formatters for current buffer

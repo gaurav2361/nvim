@@ -106,12 +106,12 @@ return {
           color = { fg = "#ff9e64" },
         },
         {
-          cond = utils.lazy_has_updates,
-          color = { fg = utils.colors.surface0, bg = "NONE", gui = "bold" },
-          padding = { left = 1, right = 1 },
           function()
             return "│"
           end,
+          cond = utils.lazy_has_updates,
+          color = { fg = utils.colors.surface0, bg = "NONE", gui = "bold" },
+          padding = { left = 1, right = 1 },
         },
         {
           "fileformat",
