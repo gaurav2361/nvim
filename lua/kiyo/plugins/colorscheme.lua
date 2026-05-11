@@ -118,6 +118,23 @@ return {
         -- treesitter language injections, like my sqlx::query!() injection.
         ["@lsp.type.string"] = {},
 
+        -- Explicit Treesitter tag highlights for JSX/TSX
+        ["@tag"] = { fg = colors.red },
+        ["@tag.builtin"] = { fg = colors.red },
+        ["@tag.delimiter"] = { fg = colors.teal },
+        ["@tag.attribute"] = { fg = colors.yellow },
+        ["@tag.javascript"] = { fg = colors.red },
+        ["@tag.tsx"] = { fg = colors.red },
+
+        -- Rainbow Delimiters
+        ["RainbowDelimiterRed"] = { fg = colors.red },
+        ["RainbowDelimiterYellow"] = { fg = colors.yellow },
+        ["RainbowDelimiterBlue"] = { fg = colors.blue },
+        ["RainbowDelimiterOrange"] = { fg = colors.peach },
+        ["RainbowDelimiterGreen"] = { fg = colors.green },
+        ["RainbowDelimiterViolet"] = { fg = colors.mauve },
+        ["RainbowDelimiterCyan"] = { fg = colors.sky },
+
         -- I'm using @markup.normal in my sqlx injection for nodes that the
         -- sql queries don't otherwise highlight. This makes those nodes
         -- white, instead of using the green highlighting used for strings.

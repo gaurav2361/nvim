@@ -90,6 +90,11 @@ return {
         -- Get the client for this buffer
         local client = vim.lsp.get_client_by_id(ev.data.client_id)
 
+        -- Disable semantic tokens for ts_ls to prevent it from overriding treesitter highlighting
+        if client and client.name == "ts_ls" then
+          client.server_capabilities.semanticTokensProvider = nil
+        end
+
         -- Keybindings
         -- Note: Many of these are already default in Neovim 0.11
         -- but we define them here for customization

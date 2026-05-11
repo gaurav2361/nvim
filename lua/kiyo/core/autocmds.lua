@@ -248,12 +248,6 @@ autocmd("LspAttach", {
   end,
 })
 
-autocmd("FileType", {
-  callback = function()
-    pcall(vim.treesitter.start)
-  end,
-})
-
 -- Remove trailing whitespace on save
 autocmd("BufWritePre", {
   group = general,

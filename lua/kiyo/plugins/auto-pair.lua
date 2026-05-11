@@ -38,33 +38,4 @@ return {
       })
     end,
   },
-
-  {
-    -- Rainbow Delimiters: Colorize brackets and delimiters
-    "HiPhish/rainbow-delimiters.nvim",
-    event = { "BufReadPre", "BufNewFile" },
-    config = function()
-      local rainbow_delimiters = require("rainbow-delimiters")
-
-      vim.g.rainbow_delimiters = {
-        strategy = {
-          [""] = rainbow_delimiters.strategy["global"], -- Use global highlighting
-          vim = rainbow_delimiters.strategy["local"], -- Enable per-filetype if needed
-        },
-        query = {
-          [""] = "rainbow-delimiters",
-          lua = "rainbow-blocks",
-        },
-        highlight = {
-          "RainbowDelimiterRed",
-          "RainbowDelimiterYellow",
-          "RainbowDelimiterBlue",
-          "RainbowDelimiterOrange",
-          "RainbowDelimiterGreen",
-          "RainbowDelimiterViolet",
-          "RainbowDelimiterCyan",
-        },
-      }
-    end,
-  },
 }
