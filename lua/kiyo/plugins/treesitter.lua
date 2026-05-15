@@ -5,18 +5,19 @@ return {
     cmd = { "TSUpdate", "TSInstall", "TSModuleInfo", "TSBufEnable", "TSBufDisable" },
     dependencies = { "davidmh/mdx.nvim" },
     build = ":TSUpdate",
-    -- Remove branch and main to let Lazy handle it normally
+    branch = "main",
+    main = "nvim-treesitter",
     init = function()
       -- Register custom predicates and directives for Nix injections (hmts replacement)
       require("kiyo.utils.nix_treesitter").setup()
-    end,
-    config = function()
+
       -- Define parsers to install
       local parsers_to_ensure = {
         "json",
         "javascript",
         "typescript",
         "tsx",
+        "jsx",
         "go",
         "yaml",
         "html",
@@ -63,10 +64,6 @@ return {
       }
 
       -- Conditionally add parsers based on system executables
-      if vim.fn.executable("hypr") == 1 and not vim.tbl_contains(parsers_to_ensure, "hyprlang") then
-        table.insert(parsers_to_ensure, "hyprlang")
-      end
-
       if vim.fn.executable("fish") == 1 then
         table.insert(parsers_to_ensure, "fish")
       end
@@ -75,54 +72,57 @@ return {
         table.insert(parsers_to_ensure, "rasi")
       end
 
-      -- Robust setup handling both old and new Treesitter APIs
-      local ok, ts = pcall(require, "nvim-treesitter.configs")
+      -- Diff against already-installed parsers so it doesn't reinstall everything on startup
+      local ok, ts_config = pcall(require, "nvim-treesitter.config")
       if ok then
-        -- Old API
-        ts.setup({
-          ensure_installed = parsers_to_ensure,
-          auto_install = true,
-          highlight = { enable = true, additional_vim_regex_highlighting = false },
-          indent = { enable = true },
-          incremental_selection = {
-            enable = true,
-            keymaps = {
-              init_selection = "<C-space>",
-              node_incremental = "<C-space>",
-              scope_incremental = false,
-              node_decremental = "<bs>",
-            },
-          },
-        })
-      else
-        -- New API (v1.0.0+)
-        local ok2, ts2 = pcall(require, "nvim-treesitter")
-        if ok2 and ts2.setup then
-          ts2.setup({
-            ensure_installed = parsers_to_ensure,
-            auto_install = true,
-            highlight = { enable = true, additional_vim_regex_highlighting = false },
-            indent = { enable = true },
-            incremental_selection = {
-              enable = true,
-              keymaps = {
-                init_selection = "<C-space>",
-                node_incremental = "<C-space>",
-                scope_incremental = false,
-                node_decremental = "<bs>",
-              },
-            },
-          })
+        local alreadyInstalled = ts_config.get_installed()
+        local parsersToInstall = vim
+          .iter(parsers_to_ensure)
+          :filter(function(parser)
+            return not vim.tbl_contains(alreadyInstalled, parser)
+          end)
+          :totable()
+
+        if #parsersToInstall > 0 then
+          require("nvim-treesitter").install(parsersToInstall)
         end
       end
+
+      -- Store parsers_to_ensure in a global or module so the config block can access it
+      _G.kiyo_treesitter_parsers = parsers_to_ensure
+    end,
+    config = function()
+      local parsers_to_ensure = _G.kiyo_treesitter_parsers or {}
+      _G.kiyo_treesitter_parsers = nil -- Clean up
+
+      -- Setup nvim-treesitter (v1.0.0+ API)
+      require("nvim-treesitter").setup({
+        ensure_installed = parsers_to_ensure,
+        auto_install = true,
+        highlight = {
+          enable = true,
+          additional_vim_regex_highlighting = false,
+        },
+        indent = {
+          enable = true,
+        },
+        incremental_selection = {
+          enable = true,
+          keymaps = {
+            init_selection = "<C-space>",
+            node_incremental = "<C-space>",
+            scope_incremental = false,
+            node_decremental = "<bs>",
+          },
+        },
+      })
 
       -- Register filetypes to their respective treesitter parsers
       vim.treesitter.language.register("bash", "kitty")
       vim.treesitter.language.register("tsx", "javascriptreact")
       vim.treesitter.language.register("tsx", "typescriptreact")
 
-      -- Force start Treesitter for the current buffer and future ones
-      -- This is necessary if the automatic highlight.enable fails to trigger
+      -- Force start Treesitter and enable folding
       vim.api.nvim_create_autocmd({ "FileType", "BufReadPost" }, {
         callback = function()
           local buf = vim.api.nvim_get_current_buf()
@@ -130,7 +130,12 @@ return {
             or vim.bo[buf].filetype
 
           -- Try to start Treesitter highlighting
-          pcall(vim.treesitter.start, buf, lang)
+          local start_ok, _ = pcall(vim.treesitter.start, buf, lang)
+          if start_ok then
+            -- Standard treesitter integrations
+            vim.wo.foldmethod = "expr"
+            vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+          end
         end,
       })
     end,
