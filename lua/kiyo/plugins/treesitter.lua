@@ -1,14 +1,11 @@
 return {
   {
     "nvim-treesitter/nvim-treesitter",
-    -- Load on these events or when these commands are run
     event = { "BufReadPost", "BufNewFile", "VeryLazy" },
     cmd = { "TSUpdate", "TSInstall", "TSModuleInfo", "TSBufEnable", "TSBufDisable" },
     dependencies = { "davidmh/mdx.nvim" },
     build = ":TSUpdate",
-    branch = "main",
-    -- 'main' is used by lazy.nvim to find the setup function
-    main = "nvim-treesitter",
+    -- Remove branch and main to let Lazy handle it normally
     init = function()
       -- Register custom predicates and directives for Nix injections (hmts replacement)
       require("kiyo.utils.nix_treesitter").setup()
@@ -19,7 +16,7 @@ return {
         "json",
         "javascript",
         "typescript",
-        "tsx", -- handles typescriptreact and often better for javascriptreact
+        "tsx",
         "go",
         "yaml",
         "html",
@@ -78,42 +75,64 @@ return {
         table.insert(parsers_to_ensure, "rasi")
       end
 
-      -- Setup nvim-treesitter
-      -- We use require("nvim-treesitter") directly as .configs is removed in v1.0.0+
-      require("nvim-treesitter").setup({
-        ensure_installed = parsers_to_ensure,
-        -- Directory to install parsers and queries to
-        install_dir = vim.fn.stdpath("data") .. "/site",
-        -- For newer versions
-        parser_install_dir = vim.fn.stdpath("data") .. "/site",
-
-        auto_install = true,
-
-        highlight = {
-          enable = true,
-          additional_vim_regex_highlighting = false,
-        },
-
-        indent = {
-          enable = true,
-        },
-
-        incremental_selection = {
-          enable = true,
-          keymaps = {
-            init_selection = "<C-space>",
-            node_incremental = "<C-space>",
-            scope_incremental = false,
-            node_decremental = "<bs>",
+      -- Robust setup handling both old and new Treesitter APIs
+      local ok, ts = pcall(require, "nvim-treesitter.configs")
+      if ok then
+        -- Old API
+        ts.setup({
+          ensure_installed = parsers_to_ensure,
+          auto_install = true,
+          highlight = { enable = true, additional_vim_regex_highlighting = false },
+          indent = { enable = true },
+          incremental_selection = {
+            enable = true,
+            keymaps = {
+              init_selection = "<C-space>",
+              node_incremental = "<C-space>",
+              scope_incremental = false,
+              node_decremental = "<bs>",
+            },
           },
-        },
-      })
+        })
+      else
+        -- New API (v1.0.0+)
+        local ok2, ts2 = pcall(require, "nvim-treesitter")
+        if ok2 and ts2.setup then
+          ts2.setup({
+            ensure_installed = parsers_to_ensure,
+            auto_install = true,
+            highlight = { enable = true, additional_vim_regex_highlighting = false },
+            indent = { enable = true },
+            incremental_selection = {
+              enable = true,
+              keymaps = {
+                init_selection = "<C-space>",
+                node_incremental = "<C-space>",
+                scope_incremental = false,
+                node_decremental = "<bs>",
+              },
+            },
+          })
+        end
+      end
 
       -- Register filetypes to their respective treesitter parsers
-      -- Using 'tsx' for both react filetypes is often more reliable for HTML tag highlighting
       vim.treesitter.language.register("bash", "kitty")
       vim.treesitter.language.register("tsx", "javascriptreact")
       vim.treesitter.language.register("tsx", "typescriptreact")
+
+      -- Force start Treesitter for the current buffer and future ones
+      -- This is necessary if the automatic highlight.enable fails to trigger
+      vim.api.nvim_create_autocmd({ "FileType", "BufReadPost" }, {
+        callback = function()
+          local buf = vim.api.nvim_get_current_buf()
+          local lang = vim.treesitter.language.get_lang(vim.bo[buf].filetype)
+            or vim.bo[buf].filetype
+
+          -- Try to start Treesitter highlighting
+          pcall(vim.treesitter.start, buf, lang)
+        end,
+      })
     end,
   },
 
@@ -131,36 +150,27 @@ return {
       "svelte",
     },
     config = function()
-      -- Independent nvim-ts-autotag setup
       require("nvim-ts-autotag").setup({
         opts = {
-          enable_close = true, -- Auto-close tags
-          enable_rename = true, -- Auto-rename pairs
+          enable_close = true,
+          enable_rename = true,
         },
         per_filetype = {
-          ["html"] = {
-            enable_close = true,
-          },
-          ["javascriptreact"] = {
-            enable_close = true,
-          },
-          ["typescriptreact"] = {
-            enable_close = true,
-          },
+          ["html"] = { enable_close = true },
+          ["javascriptreact"] = { enable_close = true },
+          ["typescriptreact"] = { enable_close = true },
         },
       })
     end,
   },
 
-  -- Rainbow Delimiters: Colorize brackets and delimiters using Treesitter
+  -- Rainbow Delimiters
   {
     "HiPhish/rainbow-delimiters.nvim",
     dependencies = "nvim-treesitter/nvim-treesitter",
     event = { "BufReadPost", "BufNewFile" },
     config = function()
       local rainbow_delimiters = require("rainbow-delimiters")
-
-      -- We set the global variable, but also call the setup if available for robustness
       vim.g.rainbow_delimiters = {
         strategy = {
           [""] = rainbow_delimiters.strategy["global"],

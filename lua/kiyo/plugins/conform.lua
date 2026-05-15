@@ -55,7 +55,7 @@ return {
     local biome_for_project = merge_table_immutable(require("conform.formatters.biome"), {
       require_cwd = false, -- Allow global usage with fallback config
       args = function(self, ctx)
-        local args = { "check", "--write", "--stdin-file-path", "$FILENAME" }
+        local args = { "check", "--write", "--unsafe", "--stdin-file-path", "$FILENAME" }
 
         -- Try to find project-specific biome config
         local project_config = find_config_file({
